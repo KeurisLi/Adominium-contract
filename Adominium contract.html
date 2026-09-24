@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Acuerdos | Adominium</title>
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--text:#15171a;--muted:#6b7280;--line:#d9dde3;--accent:#111827;--danger:#b42318}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:720px;margin:auto;padding:22px 16px 48px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px}
+.brand{font-weight:800;font-size:24px;letter-spacing:-.5px}.eyebrow{font-size:13px;color:var(--muted);margin-bottom:5px}h1{font-size:22px;margin:0 0 5px}h2{font-size:16px;margin:0 0 5px}p{line-height:1.5}
+label{display:block;font-weight:650;font-size:14px;margin:14px 0 6px}input,textarea{width:100%;font:inherit;font-size:16px;padding:13px;border:1px solid var(--line);border-radius:11px;background:#fff;color:#111}textarea{min-height:130px;resize:vertical}
+.money{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:12px}.money strong{font-size:20px}
+button{font:inherit;min-height:48px;border-radius:11px;border:0;padding:12px 16px;cursor:pointer}.primary{width:100%;background:var(--accent);color:#fff;font-weight:750;margin-top:15px}.secondary{background:#fff;border:1px solid var(--line)}.link{width:100%;background:transparent;text-decoration:underline}
+.hidden{display:none}.error{color:var(--danger);font-size:14px;min-height:18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.full{grid-column:1/-1}.meta span{display:block;color:var(--muted);font-size:12px}.meta strong{display:block;margin-top:2px;word-break:break-word}.description{white-space:pre-wrap;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fafafa}
+.terms h2{margin-top:20px}.terms p{font-size:14px;margin:5px 0}.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.45}.check input{width:21px;height:21px;margin:1px 0 0;flex:0 0 auto}
+.sigbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:16px 0 8px}.sig{background:#fff;border:2px solid var(--line);border-radius:12px;overflow:hidden}.sig canvas{display:block;width:100%;height:190px;touch-action:none}
+.small{font-size:12px;color:var(--muted)}.success{text-align:center;padding:30px 12px}.success .tick{font-size:42px}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+@media print{body{background:#fff}main{max-width:none;padding:0}.no-print{display:none!important}.card{border:0;border-radius:0;padding:0;margin:0}.print-break{break-before:page}.terms p{font-size:12px}.terms h2{font-size:14px}.meta{border:1px solid #ddd!important;padding:12px!important}.sig{width:100%;max-width:430px}.success{display:none!important}}
+</style>
+</head>
+<body>
+<main id="app">
+<section id="step1">
+  <div class="card">
+    <div class="brand">Adominium</div>
+    <div class="eyebrow">Paso 1 de 2 · Información del proyecto</div>
+    <h1>Preparar acuerdo</h1>
+    <p class="small">Completa la información antes de entregarle el teléfono al cliente.</p>
+    <label>Nombre del cliente</label><input id="name" autocomplete="name" placeholder="Nombre completo">
+    <label>Número de teléfono</label><input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(787) 000-0000">
+    <label>Email</label><input id="email" type="email" inputmode="email" autocomplete="email" placeholder="cliente@email.com">
+    <label>Pueblo</label><input id="town" placeholder="Ej. San Juan">
+    <label>Fecha</label><input id="date" type="date">
+    <label>Descripción del proyecto</label><textarea id="description" placeholder="Ej. Fabricación e instalación de 2 puertas corredizas de clóset..."></textarea>
+    <label>Precio total del proyecto ($)</label><input id="price" inputmode="decimal" placeholder="895.00">
+    <div class="money"><span>Depósito inicial (50%)</span><strong id="deposit">$0.00</strong></div>
+    <p id="error1" class="error" aria-live="polite"></p>
+    <button id="continue" class="primary" type="button">Continuar al acuerdo →</button>
+  </div>
+</section>
+
+<section id="step2" class="hidden">
+  <div id="contract" class="card">
+    <div class="brand">Adominium</div>
+    <div class="eyebrow">Acuerdo de Fabricación e Instalación</div>
+    <h1>Puertas de Clóset</h1>
+    <div class="card meta" style="margin-top:16px">
+      <div class="grid">
+        <div class="full"><span>Cliente</span><strong id="vname"></strong></div>
+        <div><span>Teléfono</span><strong id="vphone"></strong></div>
+        <div><span>Email</span><strong id="vemail"></strong></div>
+        <div><span>Pueblo</span><strong id="vtown"></strong></div>
+        <div><span>Fecha</span><strong id="vdate"></strong></div>
+        <div><span>Total</span><strong id="vtotal"></strong></div>
+        <div><span>Depósito 50%</span><strong id="vdeposit"></strong></div>
+      </div>
+    </div>
+    <div class="terms">
+      <h2>1. Proyecto</h2>
+      <p>Adominium fabricará e instalará el siguiente proyecto conforme a las especificaciones aprobadas por el cliente:</p>
+      <div id="vdescription" class="description"></div>
+
+      <h2>2. Pago</h2>
+      <p>El precio total de este proyecto es <strong id="ctotal"></strong>. Para comenzar la orden se requiere un depósito inicial del <strong>50%</strong>, equivalente a <strong id="cdeposit"></strong>. El balance restante deberá pagarse al completarse la instalación.</p>
+      <p>Adominium acepta pagos mediante <strong>ATH Móvil, efectivo, tarjeta de crédito o débito y financiamiento a través de Klarna</strong>.</p>
+      <p>Los pagos realizados mediante <strong>tarjeta de crédito o débito conllevan un cargo adicional del 3%</strong> sobre la cantidad procesada mediante dicho método. Los pagos realizados mediante <strong>Klarna conllevan un cargo adicional del 6%</strong> sobre la cantidad procesada mediante dicho método. Los pagos mediante ATH Móvil o efectivo no conllevan estos cargos adicionales.</p>
+
+      <h2>3. Medidas y cambios</h2>
+      <p>Las medidas finales serán las rectificadas por Adominium antes de comenzar la fabricación. Cualquier cambio solicitado por el cliente luego de aprobarse el proyecto podrá modificar el precio y/o la fecha de instalación.</p>
+
+      <h2>4. Condiciones ocultas</h2>
+      <p>El cliente deberá informar cualquier tubería de agua, línea eléctrica, cableado u otra instalación oculta que conozca dentro de paredes, pisos o superficies donde se realizará el trabajo. Adominium no será responsable por daños a elementos ocultos cuya ubicación no haya sido informada y que no sean razonablemente visibles o detectables antes de la instalación, excepto cuando el daño sea causado por negligencia de Adominium.</p>
+
+      <h2>5. Instalación</h2>
+      <p>El área de trabajo deberá estar accesible y libre de objetos que impidan la instalación. Si se descubre una condición no visible previamente que requiera trabajos o materiales adicionales, se informará al cliente antes de realizar dicho trabajo adicional.</p>
+
+      <h2>6. Aceptación</h2>
+      <p>Al firmar y confirmar este acuerdo, el cliente reconoce que ha revisado la descripción del proyecto, precio y términos establecidos y autoriza a Adominium a comenzar el proyecto una vez recibido el depósito inicial correspondiente.</p>
+    </div>
+
+    <div class="no-print" style="margin-top:22px;border-top:1px solid var(--line);padding-top:18px">
+      <label class="check"><input id="accept" type="checkbox"><span>Confirmo que he leído este acuerdo y acepto la descripción del proyecto, precio, depósito y términos establecidos.</span></label>
+    </div>
+
+    <div class="sigbar"><strong>Firma del cliente</strong><button id="clear" type="button" class="secondary no-print">Limpiar</button></div>
+    <div class="sig"><canvas id="sig"></canvas></div>
+    <p class="small no-print">Firme con el dedo dentro del recuadro.</p>
+    <div id="signedMeta" class="small hidden" style="margin-top:8px"></div>
+
+    <p id="error2" class="error no-print" aria-live="polite"></p>
+    <div class="no-print">
+      <button id="confirm" class="primary" type="button">Confirmar y firmar acuerdo</button>
+      <button id="back" class="link" type="button">← Corregir información</button>
+    </div>
+  </div>
+</section>
+
+<section id="done" class="hidden">
+ <div class="card success">
+  <div class="tick">✓</div><h1>Acuerdo confirmado</h1><p id="doneText"></p>
+  <button id="pdf" class="primary" type="button">Guardar / compartir como PDF</button>
+  <p class="small">En iPhone se abrirá la vista de impresión. Usa Compartir y selecciona “Guardar en Archivos” para conservar el PDF.</p>
+  <button id="new" class="secondary" type="button">Crear otro acuerdo</button>
+ </div>
+</section>
+</main>
+<script>
+(()=> {
+const $=s=>document.querySelector(s);
+const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n);
+const today=new Date(); $('#date').value=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+function getPrice(){const n=parseFloat($('#price').value.replace(/[$,]/g,''));return Number.isFinite(n)&&n>0?n:0}
+$('#price').addEventListener('input',()=>$('#deposit').textContent=money(getPrice()/2));
+
+const canvas=$('#sig'),ctx=canvas.getContext('2d');let drawing=false,signed=false;
+function resizeCanvas(){
+ const rect=canvas.getBoundingClientRect(),ratio=Math.max(1,window.devicePixelRatio||1);
+ let old=null;if(signed)old=canvas.toDataURL();
+ canvas.width=Math.round(rect.width*ratio);canvas.height=Math.round(rect.height*ratio);
+ ctx.setTransform(ratio,0,0,ratio,0,0);ctx.strokeStyle='#111';ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';
+ if(old){const img=new Image();img.onload=()=>ctx.drawImage(img,0,0,rect.width,rect.height);img.src=old}
+}
+function point(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
+canvas.addEventListener('pointerdown',e=>{drawing=true;signed=true;canvas.setPointerCapture(e.pointerId);const p=point(e);ctx.beginPath();ctx.moveTo(p.x,p.y)});
+canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=point(e);ctx.lineTo(p.x,p.y);ctx.stroke()});
+canvas.addEventListener('pointerup',()=>drawing=false);canvas.addEventListener('pointercancel',()=>drawing=false);
+$('#clear').addEventListener('click',()=>{ctx.clearRect(0,0,canvas.width,canvas.height);signed=false});
+
+$('#continue').addEventListener('click',()=>{
+ const name=$('#name').value.trim(),phone=$('#phone').value.trim(),email=$('#email').value.trim(),town=$('#town').value.trim(),desc=$('#description').value.trim(),p=getPrice();
+ if(!name||!phone||!email||!town||!$('#date').value||!desc||!p){$('#error1').textContent='Completa todos los campos antes de continuar.';return}
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ $('#error1').textContent='Verifica el email del cliente.';return}
+ $('#error1').textContent='';
+ $('#vname').textContent=name;$('#vphone').textContent=phone;$('#vemail').textContent=email;$('#vtown').textContent=town;
+ $('#vdate').textContent=$('#date').value;$('#vtotal').textContent=money(p);$('#vdeposit').textContent=money(p/2);
+ $('#ctotal').textContent=money(p);$('#cdeposit').textContent=money(p/2);$('#vdescription').textContent=desc;
+ $('#step1').classList.add('hidden');$('#step2').classList.remove('hidden');setTimeout(resizeCanvas,50);window.scrollTo(0,0);
+});
+$('#back').addEventListener('click',()=>{$('#step2').classList.add('hidden');$('#step1').classList.remove('hidden');window.scrollTo(0,0)});
+$('#confirm').addEventListener('click',()=>{
+ if(!$('#accept').checked){$('#error2').textContent='Debe marcar la casilla de aceptación.';return}
+ if(!signed){$('#error2').textContent='Falta la firma del cliente.';return}
+ $('#error2').textContent='';
+ const stamp=new Date();
+ $('#signedMeta').textContent='Firmado electrónicamente por '+$('#name').value.trim()+' · '+stamp.toLocaleString('es-PR');
+ $('#signedMeta').classList.remove('hidden');
+ $('#step2').classList.add('hidden');$('#done').classList.remove('hidden');
+ $('#doneText').textContent=$('#name').value.trim()+' confirmó y firmó el acuerdo por '+money(getPrice())+'.';
+ window.scrollTo(0,0);
+});
+$('#pdf').addEventListener('click',()=>{
+ $('#done').classList.add('hidden');$('#step2').classList.remove('hidden');
+ setTimeout(()=>{window.print();setTimeout(()=>{$('#step2').classList.add('hidden');$('#done').classList.remove('hidden')},500)},100);
+});
+$('#new').addEventListener('click',()=>location.reload());
+window.addEventListener('resize',()=>{if(!$('#step2').classList.contains('hidden'))resizeCanvas()});
+})();
+</script>
+</body>
+</html>
